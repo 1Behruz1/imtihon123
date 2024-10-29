@@ -1,59 +1,59 @@
-import React, { useEffect, useState } from 'react';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import Home from "./components/Home/Home"
-import Popular from "./components/Popular/Popular";
-import TopRated from "./components/TopRated/TopRated";
-import Upcoming from "./components/UpComing/UpComing";
-import Header from "./components/Header/Header";
+import './App.css';
+import Home from './components/Home/Home';
+import Header from './components/Header/Header';
+import Popular from './components/Popular/Popular';
+import Toprated from './components/Toprated/Toprated';
+import Upcoming from './components/Upcoming/Upcoming';
 
-const App = () => {
-  const [popularMovies, setPopularMovies] = useState([]);
-  const [topRatedMovies, setTopRatedMovies] = useState([]);
-  const [upcomingMovies, setUpcomingMovies] = useState([]);
-  const [loading, setLoading] = useState(true);
+function App() {
+  const API_KEY = '17f1ceadcf3767a35e55dd6204800668';
 
-  useEffect(() => {
-    const fetchMovies = async () => {
-      const popular = await fetch('https://api.themoviedb.org/3/movie/popular?api_key=17f1ceadcf3767a35e55dd6204800668');
-      const topRated = await fetch('https://api.themoviedb.org/3/movie/top_rated?api_key=17f1ceadcf3767a35e55dd6204800668');
-      const upcoming = await fetch('https://api.themoviedb.org/3/movie/upcoming?api_key=17f1ceadcf3767a35e55dd6204800668');
+  const popular = async () => {
+    const response = await fetch(`https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}`);
+    const data = await response.json();
+    return data;
+  };
 
-      const popularData = await popular.json();
-      const topRatedData = await topRated.json();
-      const upcomingData = await upcoming.json();
+  const upComing = async () => {
+    const response = await fetch(`https://api.themoviedb.org/3/movie/upcoming?api_key=${API_KEY}`);
+    const data = await response.json();
+    return data;                                                                                                 
+  };
 
-      setPopularMovies(popularData.results);
-      setTopRatedMovies(topRatedData.results);
-      setUpcomingMovies(upcomingData.results);
-    };
-
-    fetchMovies();
-  }, []);
+  const topRated = async () => {
+    const response = await fetch(`https://api.themoviedb.org/3/movie/top_rated?api_key=${API_KEY}`);
+    const data = await response.json();
+    return data;                                                                                                 
+  };
 
   const router = createBrowserRouter([
     {
       path: '/',
-      element: <Home />,
+      element: <div><Header/><h1 className='h1'>Home</h1></div>
     },
     {
       path: '/popular',
-      element: <Popular movies={popularMovies} />,
-    },
-    {
-      path: '/top-rated',
-      element: <TopRated movies={topRatedMovies} />,
+      element: <Popular />,
+      loader: popular
     },
     {
       path: '/upcoming',
-      element: <Upcoming movies={upcomingMovies}/>,
+      element: <Upcoming />,
+      loader: upComing
     },
+    {
+      path: '/toprated',
+      element: <Toprated />,  
+      loader: topRated
+    }
   ]);
 
   return (
-    <div>
-      <Header />
+    <>
+      <Home />
       <RouterProvider router={router} />
-    </div>
+    </>
   );
 }
 

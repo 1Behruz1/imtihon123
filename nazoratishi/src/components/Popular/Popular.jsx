@@ -1,14 +1,24 @@
-import React from 'react';
-import Item from "../Item/Item";
+import { useLoaderData } from 'react-router-dom';
+import Header from '../Header/Header'
 
-const Popular = ({ movies}) => {
-
+function Popular() {
+  const data = useLoaderData();
   return (
-    <div>
-      {movies.map((movie) => (
-        <Item key={movie.id} item={movie} />
-      ))}
-    </div>
+    <>
+        <Header />
+      <ul>
+        {
+            data.results.map(movie => (
+                
+               
+                <li key={movie.id}> <img width={200} height={300}
+                src={`https://image.tmdb.org/t/p/original${movie.poster_path}`} 
+                alt={movie.title} 
+                /> <h1>{movie.title}</h1></li>
+            ))
+        }
+      </ul>
+    </>
   );
 }
 

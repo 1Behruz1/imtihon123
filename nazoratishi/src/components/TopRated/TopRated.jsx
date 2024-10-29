@@ -1,14 +1,26 @@
-import React from 'react';
-import Item from '../Item/Item'
-const TopRated = ({ movies}) => {
+import { useLoaderData } from 'react-router-dom';
+import Header from '../Header/Header'
 
+function Toprated() {
+  const data = useLoaderData();
   return (
-    <div>
-      {movies.map((movie) => (
-        <Item key={movie.id} item={movie} />
-      ))}
-    </div>
+    <>
+          <Header/>
+      <ul>
+        {
+            data.results.map(top => (
+              <li key={top.id}>
+                <img 
+                width={200}
+                height={300}
+                src={`https://image.tmdb.org/t/p/original${top.poster_path}`} 
+                alt={top.title} 
+                />{top.title}</li>
+            ))
+        }
+      </ul>
+    </>
   );
 }
 
-export default TopRated;
+export default Toprated;
